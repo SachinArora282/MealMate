@@ -1,0 +1,6 @@
+[build]
+nixpacksBuildCmd = "npm install && cp prisma/schema.prod.prisma prisma/schema.prisma && npx prisma generate && npx prisma db push && node prisma/seed.prod.js"
+
+[deploy]
+startCommand = "node src/index.js"
+healthcheckPath = "/api/health"
