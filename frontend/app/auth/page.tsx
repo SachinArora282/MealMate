@@ -31,7 +31,11 @@ export default function AuthPage() {
       }
       router.push('/');
     } catch (err: any) {
-      setError(err?.response?.data?.error || 'Something went wrong');
+      if (!err.response) {
+        setError('Cannot reach the server. Please check your connection or try again later.');
+      } else {
+        setError(err.response.data?.error || `Error ${err.response.status}: Something went wrong`);
+      }
     } finally {
       setLoading(false);
     }
