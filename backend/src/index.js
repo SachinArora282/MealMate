@@ -58,6 +58,38 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// ─── One-Time Production Setup (run once to create tables + seed) ─────────────
+app.post('/api/setup', async (req, res) => {
+  const secret = req.headers['x-setup-secret'];
+  if (!secret || secret !== process.env.SETUP_SECRET) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  const log = [];
+  try {
+    const { execSync } = require('child_process');
+
+    log.push('Starting db push...');
+    execSync('npx prisma db push --accept-data-loss', {
+      stdio: 'pipe',
+      env: { ...process.env },
+    });
+    log.push('✅ Tables created');
+
+    log.push('Running seed...');
+    execSync('node prisma/seed.prod.js', {
+      stdio: 'pipe',
+      env: { ...process.env },
+    });
+    log.push('✅ Database seeded');
+
+    res.json({ success: true, log });
+  } catch (err) {
+    log.push('❌ Error: ' + err.message);
+    res.status(500).json({ success: false, log, error: err.stderr?.toString() || err.message });
+  }
+});
+
 // ─── Stats endpoint for homepage ───────────────────────────────────────────────
 app.get('/api/stats', async (req, res) => {
   const { PrismaClient } = require('@prisma/client');

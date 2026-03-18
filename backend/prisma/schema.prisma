@@ -1,10 +1,14 @@
+// Production schema: PostgreSQL (for Supabase/Render)
+// For local dev with SQLite, use schema.sqlite.prisma
+
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./mealmate.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -29,7 +33,7 @@ model User {
 model Restaurant {
   id           String   @id @default(uuid())
   name         String
-  cuisine      String
+  cuisine      String[]
   address      String
   city         String   @default("Mumbai")
   latitude     Float
@@ -63,7 +67,7 @@ model Dish {
   description     String?
   rating          Float    @default(0)
   popularityScore Float    @default(0)
-  tags            String   @default("[]")
+  tags            String[]
   imageUrl        String?
   mealType        String   @default("LUNCH")
   isAvailable     Boolean  @default(true)
@@ -88,16 +92,16 @@ model Review {
 }
 
 model Upload {
-  id                String   @id @default(uuid())
-  restaurantId      String
-  restaurantImage   String?
-  menuImage         String?
-  verificationVideo String?
-  extractedMenuItems String?
-  status            String   @default("PENDING")
-  adminNote         String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                 String   @id @default(uuid())
+  restaurantId       String
+  restaurantImage    String?
+  menuImage          String?
+  verificationVideo  String?
+  extractedMenuItems Json?
+  status             String   @default("PENDING")
+  adminNote          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 }
