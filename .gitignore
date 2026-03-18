@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+.env.production
+*.log
+*.db
+*.db-journal
+prisma/mealmate.db
+dist/
+build/
+.DS_Store
+Thumbs.db

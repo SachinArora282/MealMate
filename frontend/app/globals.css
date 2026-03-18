@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-orange: #FF6B35;
+    --brand-blue: #1A73E8;
+    --brand-green: #34C759;
+    --surface-dark: #1A1A2E;
+    --surface-darker: #0F0F1E;
+    --surface-card: #242436;
+  }
+
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    background: var(--surface-darker);
+    color: #fff;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--surface-dark);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--brand-orange);
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-orange-gradient text-white font-semibold px-6 py-3 rounded-2xl shadow-orange transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply bg-surface-card text-white font-semibold px-6 py-3 rounded-2xl border border-white/10 transition-all duration-200 hover:border-brand-orange/50 hover:bg-white/5 active:scale-[0.98];
+  }
+
+  .card {
+    @apply bg-surface-card rounded-2xl border border-white/5 shadow-card transition-all duration-200 hover:shadow-card-hover hover:border-white/10;
+  }
+
+  .input {
+    @apply bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-brand-orange/50 focus:ring-2 focus:ring-brand-orange/20 transition-all duration-200 w-full;
+  }
+
+  .tag {
+    @apply text-xs font-medium px-3 py-1 rounded-full;
+  }
+
+  .tag-veg {
+    @apply tag bg-green-500/20 text-green-400 border border-green-500/30;
+  }
+
+  .tag-nonveg {
+    @apply tag bg-red-500/20 text-red-400 border border-red-500/30;
+  }
+
+  .tag-orange {
+    @apply tag bg-brand-orange/20 text-brand-orange border border-brand-orange/30;
+  }
+
+  .glass {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+
+  .bottom-nav-item {
+    @apply flex flex-col items-center gap-1 text-xs font-medium transition-all duration-200 cursor-pointer;
+  }
+
+  .section-title {
+    @apply text-xl font-bold text-white font-display;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-white/50;
+  }
+
+  .page-container {
+    @apply max-w-md mx-auto min-h-screen pb-24 relative;
+  }
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #FF6B35 0%, #FF9500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero gradient */
+.hero-gradient {
+  background: linear-gradient(180deg, rgba(255,107,53,0.15) 0%, rgba(15,15,30,0) 60%);
+}
+
+/* Price badge */
+.price-badge {
+  background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(255,149,0,0.2));
+  border: 1px solid rgba(255,107,53,0.3);
+  color: #FF9500;
+}
+
+/* Dish card image */
+.dish-img {
+  @apply w-full h-48 object-cover rounded-2xl;
+}
+
+/* Star rating */
+.star {
+  color: #FFD700;
+}
+
+/* Rating badge */
+.rating-badge {
+  @apply flex items-center gap-1 bg-yellow-500/20 text-yellow-400 text-xs font-semibold px-2 py-1 rounded-full border border-yellow-500/30;
+}
+
+/* Animated gradient border */
+@keyframes rotate-gradient {
+  to { --angle: 360deg; }
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Mobile-first: max 480px content width on large screens */
+.mobile-frame {
+  max-width: 480px;
+  margin: 0 auto;
+}

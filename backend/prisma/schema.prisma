@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./mealmate.db"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String?
+  role      String   @default("USER")
+  location  String?
+  latitude  Float?
+  longitude Float?
+  googleId  String?  @unique
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews     Review[]
+  savedDishes SavedDish[]
+  restaurants Restaurant[]
+}
+
+model Restaurant {
+  id           String   @id @default(uuid())
+  name         String
+  cuisine      String
+  address      String
+  city         String   @default("Mumbai")
+  latitude     Float
+  longitude    Float
+  avgPrice     Float    @default(0)
+  rating       Float    @default(0)
+  verified     Boolean  @default(false)
+  description  String?
+  phone        String?
+  website      String?
+  imageUrl     String?
+  openingHours String?
+  priceRange   String?
+  sourceUrl    String?
+  ownerId      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  owner   User?    @relation(fields: [ownerId], references: [id])
+  dishes  Dish[]
+  reviews Review[]
+  uploads Upload[]
+}
+
+model Dish {
+  id              String   @id @default(uuid())
+  restaurantId    String
+  name            String
+  price           Float
+  dietType        String   @default("VEG")
+  description     String?
+  rating          Float    @default(0)
+  popularityScore Float    @default(0)
+  tags            String   @default("[]")
+  imageUrl        String?
+  mealType        String   @default("LUNCH")
+  isAvailable     Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  savedByUsers SavedDish[]
+}
+
+model Review {
+  id           String   @id @default(uuid())
+  userId       String
+  restaurantId String
+  rating       Float
+  comment      String?
+  imageUrl     String?
+  createdAt    DateTime @default(now())
+
+  user       User       @relation(fields: [userId], references: [id])
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Upload {
+  id                String   @id @default(uuid())
+  restaurantId      String
+  restaurantImage   String?
+  menuImage         String?
+  verificationVideo String?
+  extractedMenuItems String?
+  status            String   @default("PENDING")
+  adminNote         String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model SavedDish {
+  id        String   @id @default(uuid())
+  userId    String
+  dishId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dish Dish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dishId])
+}
