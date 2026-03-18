@@ -95,9 +95,21 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 MealMate API running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', async () => {
+  console.log(`🚀 MealMate API running on port ${PORT}`);
   console.log(`📚 Health check: http://localhost:${PORT}/api/health`);
+
+  // On production, auto-run migrations on startup
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      const { execSync } = require('child_process');
+      console.log('🗄️  Running DB migrations...');
+      execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' });
+      console.log('✅ DB ready');
+    } catch (e) {
+      console.error('⚠️  DB migration warning:', e.message);
+    }
+  }
 });
 
 module.exports = app;
